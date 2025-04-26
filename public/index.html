@@ -1,33 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Firebase Chat</title>
+  <title>Firebase Single Page App (Login + Chat)</title>
 
   <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-  <!-- Your Firebase Config -->
-  <script src="firebase-init.js"></script>
-
-  <!-- App Logic -->
-  <script defer src="app.js"></script>
+  <style>
+    #chat-section, #loading { display: none; }
+  </style>
 </head>
-<body>
-  <h1>Firebase Chat</h1>
 
-  <div id="auth">
-    <button onclick="signIn()">Sign In with Google</button>
-    <button onclick="signOut()">Sign Out</button>
-    <p id="user-info"></p>
+<body>
+  <h1>Firebase App</h1>
+
+  <!-- 🔵 Login Form -->
+  <div id="login-section">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Enter Email" required />
+      <br><br>
+      <input type="password" id="password" placeholder="Enter Password" required />
+      <br><br>
+      <button type="submit">Login</button>
+    </form>
+    <p id="loginMessage"></p>
   </div>
 
-  <div id="chat" style="display:none;">
+  <!-- 🟣 Loading Spinner -->
+  <div id="loading">
+    <p>Loading...</p>
+  </div>
+
+  <!-- 🟢 Chat Section -->
+  <div id="chat-section">
+    <h2>Welcome <span id="user-email"></span>!</h2>
+    <button id="logoutBtn">Logout</button>
+    <hr>
+
     <ul id="messages"></ul>
     <input type="text" id="messageInput" placeholder="Type your message...">
-    <button onclick="sendMessage()">Send</button>
+    <button id="sendBtn">Send</button>
   </div>
+
+  <!-- ⚡ Firebase + App Script -->
+  <script>
+    // 🔥 Your Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPeFVgGZHJYSfgKho3z0FKnMZfBx4sjeA",
+      authDomain: "fir-chat-app-66747.firebaseapp.com",
+      projectId: "fir-chat-app-66747",
+      storageBucket: "fir-chat-app-66747.appspot.com",
+      messagingSenderId: "768757302927",
+      appId: "1:768757302927:web:8ae5865d41442103f7d2fa",
+      measurementId: "G-FFBZW106SW"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const loginSection = document.getElementById('login-section');
+    const chatSection = document.getElementById('chat-section');
+    const loading = document.getElementById('loading');
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const userEmail = document.getElementById('user-email');
+
+    // 🔵 Login Form Submit
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = loginForm.email.value;
+      const password = loginForm.password.value;
+
+      // Show loading
+      loginSection.style.display = 'none';
+      loading.style.display = 'block';
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          loading.style.display = 'none';
+          chatSection.style.display = 'block';
+          userEmail.textContent = user.email;
+          listenForMessages();
+        })
+        .catch((error) => {
+          loading.style.display = 'none';
+          loginSection.style.display = 'block';
+          loginMessage.textContent = "Error: " + error.message;
+        });
+    });
+
+    // 🟢 Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        chatSection.style.display = 'none';
+        loginSection.style.display = 'block';
+      });
+    });
+
+    // 🟢 Send Message
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const msgInput = document.getElementById('messageInput');
+      const message = msgInput.value;
+      if (message.trim() !== "") {
+        db.collection('messages').add({
+          text: message,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          user: auth.currentUser.email
+        });
+        msgInput.value = '';
+      }
+    });
+
+    // 🟢 Listen for Messages
+    function listenForMessages() {
+      db.collection('messages').orderBy('createdAt')
+        .onSnapshot((snapshot) => {
+          const messagesList = document.getElementById('messages');
+          messagesList.innerHTML = '';
+          snapshot.forEach((doc) => {
+            const li = document.createElement('li');
+            li.textContent = `${doc.data().user}: ${doc.data().text}`;
+            messagesList.appendChild(li);
+          });
+        });
+    }
+  </script>
 </body>
 </html>
