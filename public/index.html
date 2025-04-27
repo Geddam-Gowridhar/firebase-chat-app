@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Chat App</title>
+  
+  <!-- Tailwind CSS for styling -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-storage.js"></script>
+  <script type="module" src="./firebase-init.js"></script>
+  <script>
+    // Ensure these functions are defined in firebase-init.js or provide placeholders for testing
+    if (typeof signInUser !== 'function') {
+      function signInUser(email, password) {
+        console.error('signInUser function is not defined.');
+      }
+    }
+    if (typeof registerUser !== 'function') {
+      function registerUser(email, password) {
+        console.error('registerUser function is not defined.');
+      }
+    }
+    if (typeof sendMessage !== 'function') {
+      function sendMessage() {
+        console.error('sendMessage function is not defined.');
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold text-center text-blue-600 mb-6">Firebase Chat App</h1>
+
+    <!-- Authentication Section -->
+    <div id="auth-section" class="bg-white p-6 rounded-lg shadow-md">
+      <input id="email" type="email" placeholder="Email" class="border p-2 w-full mb-4">
+      <input id="password" type="password" placeholder="Password" class="border p-2 w-full mb-4">
+      <div class="flex space-x-4">
+        <button type="button" onclick="signInUser(document.getElementById('email').value, document.getElementById('password').value)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Login</button>
+        <button type="button" onclick="registerUser(document.getElementById('email').value, document.getElementById('password').value)" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Sign Up</button>
+      </div>
+    </div>
+
+    <!-- Chat Section -->
+    <div id="chat-section" class="hidden mt-6 bg-white p-6 rounded-lg shadow-md">
+      <div id="messages" class="h-64 overflow-y-auto mb-4 border p-2"></div>
+      <div class="flex">
+        <input id="messageInput" type="text" placeholder="Type your message..." class="border p-2 w-full">
+        <button type="button" onclick="sendMessage()" class="bg-blue-500 text-white px-4 py-2 ml-2 rounded hover:bg-blue-600">Send</button>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
