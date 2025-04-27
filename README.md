@@ -12,4 +12,4 @@ A simple realtime chat application built with Firebase Authentication, Realtime 
 2. Run `firebase init hosting`
 3. Deploy using `firebase deploy`
 
-Made with ❤️ by [You]
+Made with ❤️ by [Gowridhar]
