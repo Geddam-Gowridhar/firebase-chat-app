@@ -14,23 +14,25 @@
   <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-storage.js"></script>
   <script type="module" src="./firebase-init.js"></script>
-  <script>
-    // Ensure these functions are defined in firebase-init.js or provide placeholders for testing
-    if (typeof signInUser !== 'function') {
-      function signInUser(email, password) {
-        console.error('signInUser function is not defined.');
-      }
-    }
-    if (typeof registerUser !== 'function') {
-      function registerUser(email, password) {
-        console.error('registerUser function is not defined.');
-      }
-    }
-    if (typeof sendMessage !== 'function') {
-      function sendMessage() {
-        console.error('sendMessage function is not defined.');
-      }
-    }
+  <script type="module">
+    import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
+
+    // Register User
+    const registerUser = (email, password) => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          console.log('User registered:', userCredential.user);
+          window.location.href = "/"; // Redirect to homepage after registration
+        })
+        .catch((error) => console.error('Error registering user:', error.message));
+    };
+
+    // Sign In User
+    const signInUser = (email, password) => {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => console.log('User signed in:', userCredential.user))
+        .catch((error) => console.error('Error signing in:', error.message));
+    };
   </script>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
@@ -50,6 +52,7 @@
 
     <!-- Chat Section -->
     <div id="chat-section" class="hidden mt-6 bg-white p-6 rounded-lg shadow-md">
+      <button id="logoutButton" type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-4">Logout</button>
       <div id="messages" class="h-64 overflow-y-auto mb-4 border p-2"></div>
       <div class="flex">
         <input id="messageInput" type="text" placeholder="Type your message..." class="border p-2 w-full">
@@ -58,6 +61,18 @@
     </div>
 
   </div>
+
+  <script>
+    // Add logout functionality
+    document.getElementById('logoutButton').addEventListener('click', async () => {
+      try {
+        await auth.signOut();
+        window.location.reload(); // Redirect to login
+      } catch (error) {
+        console.error("Error signing out:", error.message);
+      }
+    });
+  </script>
 
 </body>
 </html>
