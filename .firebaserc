@@ -1,5 +1,11 @@
 {
   "projects": {
+<<<<<<< HEAD
     "default": "chatapp-5efd4"
+=======
+
+    "default": "chatapp-5efd4"
+    "default": "chatapp-3e40b"
+>>>>>>> a5a5e5d3f98e966b6276ae7ffe7582b207e0358c
   }
 }

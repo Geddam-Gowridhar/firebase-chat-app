@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Firebase Chat App 🚀
 A simple realtime chat application built with Firebase Authentication, Realtime Database and Hosting.
 
@@ -16,4 +16,3 @@ A simple realtime chat application built with Firebase Authentication, Realtime 
 Made with ❤️ by [Gowridhar]
 =======
 # firebase-chat-app
->>>>>>> e36cd6e0dae195758c7df2e1e43c39bd5d0906ae

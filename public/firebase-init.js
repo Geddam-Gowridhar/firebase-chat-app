@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
@@ -186,4 +186,3 @@ document.getElementById("sendBtn").addEventListener("click", async () => {
 document.getElementById("logoutBtn").addEventListener("click", () => {
   signOut(auth);
 });
->>>>>>> e36cd6e0dae195758c7df2e1e43c39bd5d0906ae
